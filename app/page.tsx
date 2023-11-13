@@ -27,7 +27,16 @@ export default function Home() {
       ) : (
         isConnected ? (
           chain?.id !== 5 ? (
-            <VerifyWallet chainName={chain?.name} />
+            <Box sx={{
+              width: '100%',
+              minHeight: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              flex: 'auto',
+              justifyContent: 'center'
+            }}>
+              <VerifyWallet chainName={chain?.name} />
+            </Box>
           ) : (
             <Survey />
           )
