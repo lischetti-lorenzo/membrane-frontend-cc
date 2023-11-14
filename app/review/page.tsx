@@ -1,15 +1,41 @@
 'use client'
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { NavBar } from '../../components/UI/NavBar';
 import { SurveyContext } from '../../contexts/SurveyContext';
 import { useQuery } from '@tanstack/react-query';
 import { Box, CircularProgress, FormControl, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { getQuiz } from '../../api/api';
 import { AnswerSurveyFirst } from '../../components/AnswerSurveyFirst';
+import { PrimaryButton } from '../../components/UI/PrimaryBtn';
+import { writeContract, waitForTransaction } from 'wagmi/actions';
+import { QUIZ_CONTRACT_ABI, QUIZ_CONTRACT_ADDRESS } from '../../constants';
+import { useRouter } from 'next/navigation';
 
 export default function Review () {
   const { data, isLoading } = useQuery({ queryKey: ['quiz'], queryFn: getQuiz });
   const { answersIds } = useContext(SurveyContext);
+  const [ isLoadingTx, setIsLoadingTx ] = useState(false);
+  const router = useRouter();
+
+  const submitSurvey = async () => {
+    setIsLoadingTx(true);
+
+    try {
+      const tx = await writeContract({
+        address: QUIZ_CONTRACT_ADDRESS,
+        abi: QUIZ_CONTRACT_ABI,
+        functionName: 'submit',
+        args: [1, answersIds] // Fake survey Id
+      });
+
+      await waitForTransaction(tx);
+      router.push('/');
+    } catch (error) {
+      console.error(error);
+      window.alert(error);
+    }
+    setIsLoadingTx(false);
+  }
 
   return (
     <>
@@ -79,6 +105,17 @@ export default function Review () {
                 </Box>
               )
             })}
+
+            {isLoadingTx ? (
+              <div>Loading...</div>
+            ) : (
+              <PrimaryButton
+                text='Submit'
+                onClick={submitSurvey}
+                styles={{ width: '150px' }}
+              />
+            )}
+
           </Box>
         )
       )}

@@ -9,8 +9,8 @@ import PsychologyAltIcon from '@mui/icons-material/PsychologyAlt';
 import { Box, IconButton, Menu, MenuItem } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import { ConnectWalletBtn } from './ConnectWalletBtn';
-import { useAccount, useContractRead, useDisconnect } from 'wagmi';
-import { QUIZ_CONTRACT_ABI, QUIZ_CONTRACT_ADDRESS } from '../../constants';
+import { useAccount, useBalance, useDisconnect } from 'wagmi';
+import { QUIZ_CONTRACT_ADDRESS } from '../../constants';
 
 export function NavBar() {
   const { address, isConnected } = useAccount();
@@ -30,11 +30,9 @@ export function NavBar() {
     disconnect()
   }
 
-  const { data: quizBalanceOfUser } = useContractRead({
-    abi: QUIZ_CONTRACT_ABI,
-    address: QUIZ_CONTRACT_ADDRESS,
-    functionName: "balanceOf",
-    args: [address]
+  const { data: quizBalanceOfUser } = useBalance({
+    address,
+    token: QUIZ_CONTRACT_ADDRESS
   });
 
   return (
@@ -67,7 +65,7 @@ export function NavBar() {
               alignItems='center'
             >
               <Typography mr={2}>
-                {!quizBalanceOfUser ? 0 : Number(quizBalanceOfUser)} $QUIZ
+                {quizBalanceOfUser && !isNaN(Number(quizBalanceOfUser.formatted)) ? Number(quizBalanceOfUser.formatted) : 0} $QUIZ
               </Typography>
 
               <IconButton
