@@ -6,10 +6,11 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import PsychologyAltIcon from '@mui/icons-material/PsychologyAlt';
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import { Box, IconButton, Menu, MenuItem } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import { ConnectWalletBtn } from './ConnectWalletBtn';
-import { useAccount, useDisconnect } from 'wagmi';
+import { useAccount, useContractRead, useDisconnect } from 'wagmi';
+import { QUIZ_CONTRACT_ABI, QUIZ_CONTRACT_ADDRESS } from '../../constants';
 
 export function NavBar() {
   const { address, isConnected } = useAccount();
@@ -28,6 +29,14 @@ export function NavBar() {
     handleClose()
     disconnect()
   }
+
+  const { data: quizBalanceOfUser } = useContractRead({
+    abi: QUIZ_CONTRACT_ABI,
+    address: QUIZ_CONTRACT_ADDRESS,
+    functionName: "balanceOf",
+    args: [address]
+  });
+  console.log('QUIZ: ', quizBalanceOfUser)
 
   return (
     <AppBar position='static'>
@@ -53,7 +62,15 @@ export function NavBar() {
           </Typography>
 
           {isConnected ? (
-            <div>
+            <Box
+              display='flex'
+              flexDirection='row'
+              alignItems='center'
+            >
+              <Typography mr={2}>
+                {Number(quizBalanceOfUser)} $QUIZ
+              </Typography>
+
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -82,7 +99,7 @@ export function NavBar() {
                 <MenuItem disabled={true}>{address}</MenuItem>
                 <MenuItem onClick={disconnectWallet}>Disconnect Wallet</MenuItem>
               </Menu>
-            </div>
+            </Box>
           ) : (
             <ConnectWalletBtn />
           )}
