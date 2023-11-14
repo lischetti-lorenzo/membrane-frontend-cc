@@ -6,6 +6,8 @@ import { goerli, sepolia } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import { getDefaultWallets } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState } from 'react';
+import { SurveyContext } from '../contexts/SurveyContext';
 
 const darkTheme = createTheme({
   palette: {
@@ -30,11 +32,27 @@ const wagmiConfig = createConfig({
 const queryClient = new QueryClient();
 
 export function Providers({ children } : { children: React.ReactNode }) {
+  const [ currentQuestionIndex, setCurrentQuestionIndex ] = useState(0)
+  const [ timeIsUp, setTimeIsUp ] = useState(false);
+  const [ answersIds, setAnswersIds ] = useState<number[]>([]);
+  const [ currentAnswerId, setCurrentAnswerId ] = useState<string| null>(null);
+
   return (
     <ThemeProvider theme={darkTheme}>
       <WagmiConfig config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
-          {children}
+          <SurveyContext.Provider value={{
+            currentQuestionIndex,
+            setCurrentQuestionIndex,
+            timeIsUp,
+            setTimeIsUp,
+            answersIds,
+            setAnswersIds,
+            currentAnswerId,
+            setCurrentAnswerId
+          }}>
+            {children}
+          </SurveyContext.Provider>
         </QueryClientProvider>
       </WagmiConfig>
     </ThemeProvider>

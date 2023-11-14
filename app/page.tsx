@@ -4,18 +4,13 @@ import { NavBar } from '../components/UI/NavBar'
 import { Login } from '../components/Login';
 import { Box } from '@mui/material';
 import { useAccount, useNetwork } from 'wagmi';
-import { VerifyWallet } from '../components/VerifyWallet';
 import { Survey } from '../components/Survey';
-import { SurveyContext } from '../contexts/SurveyContext';
+import { VerifyWallet } from '../components/VerifyWallet';
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
   const { isConnected, isConnecting } = useAccount();
-  const { chain } = useNetwork()
-  const [ currentQuestionIndex, setCurrentQuestionIndex ] = useState(0)
-  const [ timeIsUp, setTimeIsUp ] = useState(false);
-  const [ answersIds, setAnswersIds ] = useState<number[]>([]);
-  const [ currentAnswerId, setCurrentAnswerId ] = useState<string| null>(null);
+  const { chain } = useNetwork();
 
   useEffect(() => {
     setIsMounted(true);
@@ -43,20 +38,7 @@ export default function Home() {
               <VerifyWallet chainName={chain?.name} />
             </Box>
           ) : (
-            <>
-              <SurveyContext.Provider value={{
-                currentQuestionIndex,
-                setCurrentQuestionIndex,
-                timeIsUp,
-                setTimeIsUp,
-                answersIds,
-                setAnswersIds,
-                currentAnswerId,
-                setCurrentAnswerId
-              }}>
-                <Survey />
-              </SurveyContext.Provider>
-            </>
+            <Survey />
           )
         ) : (
           <Box sx={{

@@ -4,6 +4,7 @@ import CircularProgressWithTime from './UI/CircularProgressWithTime';
 import { PrimaryButton } from './UI/PrimaryBtn';
 import { useContext, useEffect } from 'react';
 import { SurveyContext } from '../contexts/SurveyContext';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   question: IQuestion
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export function Question({ question, isLastQuestion }: Props) {
+  const router = useRouter();
   const {
     timeIsUp,
     answersIds,
@@ -29,7 +31,7 @@ export function Question({ question, isLastQuestion }: Props) {
     const answerId = currentAnswerId !== null ? Number(currentAnswerId) + 1 : 0;
     setAnswersIds([...answersIds, answerId]);
     if (isLastQuestion) {
-      console.log('Review: ', answersIds);
+      router.push('/review');
     } else {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
