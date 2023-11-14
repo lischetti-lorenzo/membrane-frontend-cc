@@ -36,7 +36,6 @@ export function NavBar() {
     functionName: "balanceOf",
     args: [address]
   });
-  console.log('QUIZ: ', quizBalanceOfUser)
 
   return (
     <AppBar position='static'>
@@ -68,7 +67,7 @@ export function NavBar() {
               alignItems='center'
             >
               <Typography mr={2}>
-                {Number(quizBalanceOfUser)} $QUIZ
+                {!quizBalanceOfUser ? 0 : Number(quizBalanceOfUser)} $QUIZ
               </Typography>
 
               <IconButton
