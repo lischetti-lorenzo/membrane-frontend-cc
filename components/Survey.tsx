@@ -2,39 +2,48 @@ import { Box, Button, Card, CardActions, CardContent, CardMedia, CircularProgres
 import { useQuery } from '@tanstack/react-query';
 import { getQuiz } from '../api/api';
 import { SurveyCard } from './UI/SurveyCard';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { Question } from './Question';
+import { SurveyContext } from '../contexts/SurveyContext';
 
 export function Survey() {
   const { data, isLoading } = useQuery({ queryKey: ['quiz'], queryFn: getQuiz });
+  const { currentQuestionIndex, setCurrentQuestionIndex } = useContext(SurveyContext);
   const [ surveyStarted, setSurveyStarted ] = useState(false);
 
   const startSurvey = () => {
     setSurveyStarted(true);
+    setCurrentQuestionIndex(0);
   }
 
   return (
-    <Box
-      alignItems='center'
-      sx={{
-        width: '100%',
-        minHeight: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        flex: 'auto',
-        justifyContent: 'center'
-      }}
-    >
+    <>
       { isLoading ? (
         <CircularProgress />
       ) : (
         data ? (
           surveyStarted ? (
-            <div>Survey Started</div>
+            <Question
+              question={data.questions[currentQuestionIndex]}
+              isLastQuestion={data.questions.length === currentQuestionIndex + 1}
+            />
           ) : (
-            <SurveyCard data={data} onClickStart={startSurvey} />
+            <Box
+              alignItems='center'
+              sx={{
+                width: '100%',
+                minHeight: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                flex: 'auto',
+                justifyContent: 'center'
+              }}
+            >
+              <SurveyCard data={data} onClickStart={startSurvey} />
+            </Box>
           )
         ) : null
       )}
-    </Box>
+    </>
   )
 }

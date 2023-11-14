@@ -2,7 +2,7 @@ interface IOption {
   text: string
 }
 
-interface IQuestion {
+export interface IQuestion {
   text: string
   image: string
   lifetimeSeconds: number
