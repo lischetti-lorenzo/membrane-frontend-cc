@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import { ConnectWalletBtn } from './UI/ConnectWalletBtn';
 import { Button, Typography } from '@mui/material';
 import { useSwitchNetwork } from 'wagmi';
 

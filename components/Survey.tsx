@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardActions, CardContent, CardMedia, CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { getQuiz } from '../api/api';
 import { SurveyCard } from './UI/SurveyCard';

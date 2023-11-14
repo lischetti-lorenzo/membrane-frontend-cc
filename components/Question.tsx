@@ -1,8 +1,8 @@
-import { Box, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography } from '@mui/material';
+import { Box, FormControl, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { IQuestion } from '../types/survey.type';
 import CircularProgressWithTime from './UI/CircularProgressWithTime';
 import { PrimaryButton } from './UI/PrimaryBtn';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { SurveyContext } from '../contexts/SurveyContext';
 
 interface Props {
